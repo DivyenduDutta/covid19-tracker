@@ -20,13 +20,18 @@ def save_obj(obj, name, directory, json_save_needed):
             pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
         if json_save_needed:
             if type(obj) == dict:
-                full_json_data_file_path = directory_path + name + "_" + timestamp + ".json"
-                with open(full_json_data_file_path, 'w') as fp:
+                full_json_data_file_path = (
+                    directory_path + name + "_" + timestamp + ".json"
+                )
+                with open(full_json_data_file_path, "w") as fp:
                     json.dump(obj, fp)
             else:
-               Logger.log(
-                       "error", "FilePickling", "save_obj", "Data cannot be saved as json as its not a dict"
-                      ) 
+                Logger.log(
+                    "error",
+                    "FilePickling",
+                    "save_obj",
+                    "Data cannot be saved as json as its not a dict",
+                )
     else:
         Logger.log(
             "error", "FilePickling", "save_obj", full_data_file_path + " already exists"
