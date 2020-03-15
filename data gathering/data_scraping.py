@@ -1,12 +1,13 @@
+""" pylint missing-module-docstring-disable """
 from YALogger.custom_logger import Logger
-import Constants
-import urllib3
 from bs4 import BeautifulSoup
+import urllib3
+import Constants
 from FileUtil.FilePickling import save_obj
 
 # initailize the YALogger
 Logger.initialize_logger(
-    logger_prop_file_path=".\logger.properties", log_file_path="./logs"
+    logger_prop_file_path="./logger.properties", log_file_path="./logs"
 )
 
 
@@ -54,7 +55,7 @@ def _parse_country_info(html_data, corona_data):
         country_name_tag = country_data[0]
         country_name = country_name_tag.find(text=True).encode("utf-8").strip()
         if country_name == b"":
-            if country_name_tag.find("a", class_="mt_a") != None:
+            if country_name_tag.find("a", class_="mt_a") is not None:
                 country_name = (
                     country_name_tag.find("a", class_="mt_a")
                     .find(text=True)
@@ -132,6 +133,7 @@ def _parse_country_info(html_data, corona_data):
 
 
 def scrape_corona_virus_data():
+    # pylint: disable=missing-function-docstring
     Logger.perform_method_entry_logging("data_scraping", "_parse_country_info")
 
     http_pool = urllib3.connection_from_url(Constants.SOURCE_ROOT_WEBSITE_URL)

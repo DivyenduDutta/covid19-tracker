@@ -1,30 +1,31 @@
+""" pylint missing-module-docstring-disable """
 import pickle
 import json
 import os
 import glob
 from os import path
 from datetime import datetime
-import shutil
 from YALogger.custom_logger import Logger
 
 
 def save_obj(obj, name, directory, json_save_needed):
+    # pylint: disable=missing-function-docstring
     directory_path = os.getcwd() + "/" + directory + "/"
     if not path.exists(directory_path):
         os.mkdir(directory_path)
 
     timestamp = datetime.now().strftime("%Y-%m-%d")
     full_data_file_path = directory_path + name + "_" + timestamp + ".pkl"
-    if path.exists(full_data_file_path) == False:
-        with open(full_data_file_path, "wb") as f:
-            pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+    if not path.exists(full_data_file_path):
+        with open(full_data_file_path, "wb") as data_file:
+            pickle.dump(obj, data_file, pickle.HIGHEST_PROTOCOL)
         if json_save_needed:
-            if type(obj) == dict:
+            if isinstance(obj, dict):
                 full_json_data_file_path = (
                     directory_path + name + "_" + timestamp + ".json"
                 )
-                with open(full_json_data_file_path, "w") as fp:
-                    json.dump(obj, fp)
+                with open(full_json_data_file_path, "w") as json_file:
+                    json.dump(obj, json_file)
             else:
                 Logger.log(
                     "error",
@@ -39,19 +40,21 @@ def save_obj(obj, name, directory, json_save_needed):
 
 
 def load_obj(name, directory):
+    # pylint: disable=missing-function-docstring
     directory_path = os.getcwd() + "/" + directory + "/"
     timestamp = datetime.now().strftime("%Y-%m-%d")
     full_data_file_path = directory_path + name + "_" + timestamp + ".pkl"
-    if path.exists(full_data_file_path) == True:
-        with open(full_data_file_path, "rb") as f:
-            return pickle.load(f)
+    if path.exists(full_data_file_path):
+        with open(full_data_file_path, "rb") as data_file:
+            return pickle.load(data_file)
     else:
         raise IOError(full_data_file_path + " doesnt exist")
 
 
-def load_latest_obj(name, directory):
+def load_latest_obj(directory):
+    # pylint: disable=missing-function-docstring
     directory_path = os.getcwd() + "/" + directory + "/*.pkl"  # all pickle files
     list_of_files = glob.glob(directory_path)
     latest_file = max(list_of_files, key=os.path.getctime)
-    with open(latest_file, "rb") as f:
-        return pickle.load(f)
+    with open(latest_file, "rb") as data_file:
+        return pickle.load(data_file)
