@@ -5,7 +5,6 @@ import glob
 from os import path
 from datetime import datetime
 import shutil
-from HelperUtils import data_for_book_exists_current_date
 from YALogger.custom_logger import Logger
 
 
