@@ -20,7 +20,7 @@ def save_obj(obj, name, directory, json_save_needed):
         with open(full_data_file_path, "wb") as data_file:
             pickle.dump(obj, data_file, pickle.HIGHEST_PROTOCOL)
         if json_save_needed:
-            if isinstance(obj, dict):
+            if isinstance(obj, (dict, list)):
                 full_json_data_file_path = (
                     directory_path + name + "_" + timestamp + ".json"
                 )

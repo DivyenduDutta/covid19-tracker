@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import urllib3
 import Constants
 from FileUtil.FilePickling import save_obj
+from datetime import datetime
 
 # initailize the YALogger
 Logger.initialize_logger(
@@ -38,6 +39,7 @@ def _parse_total_counter_info(html_data, corona_data):
         )
         corona_data[tag] = global_counter_data_int
 
+    corona_data["data_received_date"] = datetime.now().strftime("%Y-%m-%d")
     Logger.perform_method_exit_logging("data_scraping", "_parse_total_counter_info")
     return corona_data
 
@@ -46,7 +48,7 @@ def _parse_country_info(html_data, corona_data):
     Logger.perform_method_entry_logging("data_scraping", "_parse_country_info")
 
     soup = _create_main_parser(html_data)
-    country_table_tag = soup.find("table", attrs={"id": "main_table_countries"})
+    country_table_tag = soup.find("table", attrs={"id": "main_table_countries_today"})
     country_rows_tag = country_table_tag.findAll("tr")
     for country_row_tag in country_rows_tag[
         1 : len(country_rows_tag) - 1
@@ -69,64 +71,34 @@ def _parse_country_info(html_data, corona_data):
                     .encode("utf-8")
                     .strip()
                 )
+        country_data_obj = {}
         country_name = country_name.decode("utf8")
-        corona_data[country_name] = {}
-        corona_data[country_name]["total_cases"] = (
-            country_data[1]
-            .find(text=True)
-            .encode("utf-8")
-            .strip()
-            .decode("utf8")
-            .replace(",", "")
-        )
-        corona_data[country_name]["new_cases"] = (
-            country_data[2]
-            .find(text=True)
-            .encode("utf-8")
-            .strip()
-            .decode("utf8")
-            .replace(",", "")
-        )
-        corona_data[country_name]["total_deaths"] = (
-            country_data[3]
-            .find(text=True)
-            .encode("utf-8")
-            .strip()
-            .decode("utf8")
-            .replace(",", "")
-        )
-        corona_data[country_name]["new_deaths"] = (
-            country_data[4]
-            .find(text=True)
-            .encode("utf-8")
-            .strip()
-            .decode("utf8")
-            .replace(",", "")
-        )
-        corona_data[country_name]["total_recovered"] = (
-            country_data[5]
-            .find(text=True)
-            .encode("utf-8")
-            .strip()
-            .decode("utf8")
-            .replace(",", "")
-        )
-        corona_data[country_name]["active_cases"] = (
-            country_data[6]
-            .find(text=True)
-            .encode("utf-8")
-            .strip()
-            .decode("utf8")
-            .replace(",", "")
-        )
-        corona_data[country_name]["critical"] = (
-            country_data[7]
-            .find(text=True)
-            .encode("utf-8")
-            .strip()
-            .decode("utf8")
-            .replace(",", "")
-        )
+        country_data_obj["country_name"] = country_name
+        country_data_tags = [
+            "total_cases",
+            "new_cases",
+            "total_deaths",
+            "new_deaths",
+            "total_recovered",
+            "active_cases",
+            "critical",
+        ]
+        for single_country_data, country_data_tag in zip(
+            country_data[1:], country_data_tags
+        ):
+            single_country_data_text = single_country_data.find(text=True)
+            if isinstance(single_country_data_text, str):
+                country_data_obj[country_data_tag] = (
+                    single_country_data_text.encode("utf-8")
+                    .strip()
+                    .decode("utf8")
+                    .replace(",", "")
+                )
+            else:
+                country_data_obj[country_data_tag] = ""
+
+        country_data_obj["data_received_date"] = datetime.now().strftime("%Y-%m-%d")
+        corona_data.append(country_data_obj)
 
     Logger.perform_method_exit_logging("data_scraping", "_parse_country_info")
     return corona_data
@@ -142,8 +114,10 @@ def scrape_corona_virus_data():
     )
     corona_data = {}
     corona_data = _parse_total_counter_info(html_data, corona_data)
-    corona_data = _parse_country_info(html_data, corona_data)
-    save_obj(corona_data, "Corona_Virus_Data", "Data", True)
+    save_obj(corona_data, "Total_Corona_Virus_Data", "Data", True)
+    country_data = []
+    country_data = _parse_country_info(html_data, country_data)
+    save_obj(country_data, "Country_Corona_Virus_Data", "Data", True)
     # Logger.log('DEBUG', 'data_scraping', 'scrape_corona_virus_data', html_data)
 
     Logger.perform_method_exit_logging("data_scraping", "scrape_corona_virus_data")
