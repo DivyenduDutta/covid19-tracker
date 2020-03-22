@@ -8,34 +8,31 @@ from datetime import datetime
 from YALogger.custom_logger import Logger
 
 
-def save_obj(obj, name, directory, json_save_needed):
+def save_obj(obj, name, directory):
     # pylint: disable=missing-function-docstring
     directory_path = os.getcwd() + "/" + directory + "/"
     if not path.exists(directory_path):
         os.mkdir(directory_path)
 
     timestamp = datetime.now().strftime("%Y-%m-%d")
-    full_data_file_path = directory_path + name + "_" + timestamp + ".pkl"
-    if not path.exists(full_data_file_path):
-        with open(full_data_file_path, "wb") as data_file:
-            pickle.dump(obj, data_file, pickle.HIGHEST_PROTOCOL)
-        if json_save_needed:
-            if isinstance(obj, (dict, list)):
-                full_json_data_file_path = (
-                    directory_path + name + "_" + timestamp + ".json"
-                )
-                with open(full_json_data_file_path, "w") as json_file:
-                    json.dump(obj, json_file)
-            else:
-                Logger.log(
-                    "error",
-                    "FilePickling",
-                    "save_obj",
-                    "Data cannot be saved as json as its not a dict",
-                )
+    full_json_data_file_path = directory_path + name + "_" + timestamp + ".json"
+    if not path.exists(full_json_data_file_path):
+        if isinstance(obj, (dict, list)):
+            with open(full_json_data_file_path, "w") as json_file:
+                json.dump(obj, json_file)
+        else:
+            Logger.log(
+                "error",
+                "FilePickling",
+                "save_obj",
+                "Data cannot be saved as json as its not a dict",
+            )
     else:
         Logger.log(
-            "error", "FilePickling", "save_obj", full_data_file_path + " already exists"
+            "error",
+            "FilePickling",
+            "save_obj",
+            full_json_data_file_path + " already exists",
         )
 
 

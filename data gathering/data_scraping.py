@@ -120,10 +120,10 @@ def scrape_corona_virus_data():
     )
     corona_data = {}
     corona_data = _parse_total_counter_info(html_data, corona_data)
-    save_obj(corona_data, "Total_Corona_Virus_Data", "Data", True)
+    save_obj(corona_data, "Total_Corona_Virus_Data", "Data")
     country_data = []
     country_data = _parse_country_info(html_data, country_data)
-    save_obj(country_data, "Country_Corona_Virus_Data", "Data", True)
+    save_obj(country_data, "Country_Corona_Virus_Data", "Data")
     # Logger.log('DEBUG', 'data_scraping', 'scrape_corona_virus_data', html_data)
 
     Logger.perform_method_exit_logging("data_scraping", "scrape_corona_virus_data")
