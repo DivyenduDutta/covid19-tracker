@@ -88,11 +88,17 @@ def _parse_country_info(html_data, corona_data):
         ):
             single_country_data_text = single_country_data.find(text=True)
             if isinstance(single_country_data_text, str):
-                country_data_obj[country_data_tag] = (
+                single_country_data_text_clean = (
                     single_country_data_text.encode("utf-8")
                     .strip()
                     .decode("utf8")
                     .replace(",", "")
+                    .replace("+", "")
+                )
+                country_data_obj[country_data_tag] = (
+                    int(single_country_data_text_clean)
+                    if single_country_data_text_clean != ""
+                    else 0
                 )
             else:
                 country_data_obj[country_data_tag] = ""
