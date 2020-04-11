@@ -25,3 +25,10 @@ hs_err_pid*
 __pycache__/
 Data/
 logs/
+
+# Java ignores
+*/target/*
+*/.settings/*
+*/.mvn/*
+.classpath
+.project
