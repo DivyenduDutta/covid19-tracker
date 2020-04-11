@@ -57,7 +57,7 @@ def _parse_country_info(html_data, corona_data):
         country_data = country_row_tag.findAll("td")
         country_name_tag = country_data[0]
         country_name = country_name_tag.find(text=True).encode("utf-8").strip()
-        # print(country_name_tag)
+        #print(country_name_tag)
         if country_name == b"":
             if country_name_tag.find("a", class_="mt_a") is not None:
                 country_name = (
@@ -73,6 +73,8 @@ def _parse_country_info(html_data, corona_data):
                     .encode("utf-8")
                     .strip()
                 )
+            else:
+                continue
         country_data_obj = {}
         country_name = country_name.decode("utf8")
         country_data_obj["country_name"] = country_name
