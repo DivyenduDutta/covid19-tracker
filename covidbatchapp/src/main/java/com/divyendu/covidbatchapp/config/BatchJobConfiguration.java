@@ -1,8 +1,6 @@
 package com.divyendu.covidbatchapp.config;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,9 +9,6 @@ import java.util.function.Function;
 import javax.persistence.EntityManagerFactory;
 
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.JobParametersValidator;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -35,11 +30,13 @@ import org.springframework.core.io.PathResource;
 
 import com.divyendu.covidbatchapp.constants.Constants;
 import com.divyendu.covidbatchapp.file.FileDetails;
+import com.divyendu.covidbatchapp.listeners.DataScrapeListener;
 import com.divyendu.covidbatchapp.mappers.GlobalDataJsonLineMapper;
 import com.divyendu.covidbatchapp.models.CountryDataEntity;
 import com.divyendu.covidbatchapp.models.CountryDataRecord;
 import com.divyendu.covidbatchapp.models.GlobalDataEntity;
 import com.divyendu.covidbatchapp.models.GlobalDataRecord;
+import com.divyendu.covidbatchapp.tasklet.DataScrapingInvokerTasklet;
 import com.divyendu.covidbatchapp.tasklet.DeleteDataFileTasklet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -72,11 +69,12 @@ public class BatchJobConfiguration {
 	@Bean
 	public Job job(@Qualifier("globalDataStep") Step globalDataStep, 
 						@Qualifier("countryDataStep") Step countryDataStep,
-						@Qualifier("deleteDataFileStep") Step deleteDataFileStep) throws Exception{
+						@Qualifier("deleteDataFileStep") Step deleteDataFileStep,
+						@Qualifier("dataScrapeStep") Step dataScrapeStep) throws Exception{
 		return this.jobBuilderFactory
 				.get(Constants.JOB_NAME)
-				.validator(validator())
-				.start(globalDataStep)
+				.start(dataScrapeStep)
+				.next(globalDataStep)
 				.next(countryDataStep)
 				.next(deleteDataFileStep)
 				.build();
@@ -117,6 +115,15 @@ public class BatchJobConfiguration {
     public Step deleteDataFileStep() {
     	return this.stepBuilderFactory.get(Constants.DELETE_FILE_STEP_NAME)
     			.tasklet(new DeleteDataFileTasklet())
+    			.build();
+    }
+    
+    @Bean
+    @Qualifier("dataScrapeStep")
+    public Step dataScrapeStep() {
+    	return this.stepBuilderFactory.get(Constants.DATA_SCRAPE_STEP_NAME)
+    			.tasklet(new DataScrapingInvokerTasklet())
+    			.listener(new DataScrapeListener())
     			.build();
     }
     
@@ -207,7 +214,7 @@ public class BatchJobConfiguration {
         return writer;
     }
     
-    @Bean
+    /*@Bean
     public JobParametersValidator validator() {
         return new JobParametersValidator() {
             @Override
@@ -237,5 +244,5 @@ public class BatchJobConfiguration {
                 }
             }
         };
-    }
+    }*/
 }
