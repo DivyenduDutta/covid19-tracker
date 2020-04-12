@@ -1,6 +1,6 @@
 """ pylint missing-module-docstring-disable """
 from datetime import datetime
-from YALogger.custom_logger import Logger
+#from YALogger.custom_logger import Logger
 from bs4 import BeautifulSoup
 import urllib3
 import Constants
@@ -8,19 +8,19 @@ from FileUtil.FilePickling import save_obj
 
 
 # initailize the YALogger
-Logger.initialize_logger(
-    logger_prop_file_path="./logger.properties", log_file_path="./logs"
-)
+#Logger.initialize_logger(
+#    logger_prop_file_path="./logger.properties", log_file_path="./logs"
+#)
 
 
 def _create_main_parser(html_data):
-    Logger.log("info", "data_scraping", "_create_main_parser", "creating bs4 parser")
+    #Logger.log("info", "data_scraping", "_create_main_parser", "creating bs4 parser")
     soup = BeautifulSoup(html_data, "html.parser")
     return soup
 
 
 def _parse_total_counter_info(html_data, corona_data):
-    Logger.perform_method_entry_logging("data_scraping", "_parse_total_counter_info")
+    #Logger.perform_method_entry_logging("data_scraping", "_parse_total_counter_info")
 
     soup = _create_main_parser(html_data)
     main_counter_wrap_divs = soup.findAll("div", class_="maincounter-number")
@@ -35,18 +35,18 @@ def _parse_total_counter_info(html_data, corona_data):
             .replace(",", "")
         )
         global_counter_data_int = int(global_counter_data)
-        Logger.log(
-            "info", "data_scraping", "_parse_total_counter_info", global_counter_data
-        )
+        #Logger.log(
+        #    "info", "data_scraping", "_parse_total_counter_info", global_counter_data
+        #)
         corona_data[tag] = global_counter_data_int
 
     corona_data["data_received_date"] = datetime.now().strftime("%Y-%m-%d")
-    Logger.perform_method_exit_logging("data_scraping", "_parse_total_counter_info")
+    #Logger.perform_method_exit_logging("data_scraping", "_parse_total_counter_info")
     return corona_data
 
 
 def _parse_country_info(html_data, corona_data):
-    Logger.perform_method_entry_logging("data_scraping", "_parse_country_info")
+    #Logger.perform_method_entry_logging("data_scraping", "_parse_country_info")
 
     soup = _create_main_parser(html_data)
     country_table_tag = soup.find("table", attrs={"id": "main_table_countries_today"})
@@ -110,13 +110,13 @@ def _parse_country_info(html_data, corona_data):
         country_data_obj["data_received_date"] = datetime.now().strftime("%Y-%m-%d")
         corona_data.append(country_data_obj)
 
-    Logger.perform_method_exit_logging("data_scraping", "_parse_country_info")
+    #Logger.perform_method_exit_logging("data_scraping", "_parse_country_info")
     return corona_data
 
 
 def scrape_corona_virus_data():
     # pylint: disable=missing-function-docstring
-    Logger.perform_method_entry_logging("data_scraping", "_parse_country_info")
+    #Logger.perform_method_entry_logging("data_scraping", "_parse_country_info")
 
     http_pool = urllib3.connection_from_url(Constants.SOURCE_ROOT_WEBSITE_URL)
     html_data = http_pool.request("GET", Constants.SOURCE_ROOT_WEBSITE_URL).data.decode(
@@ -130,10 +130,12 @@ def scrape_corona_virus_data():
     save_obj(country_data, "Country_Corona_Virus_Data", "Data")
     # Logger.log('DEBUG', 'data_scraping', 'scrape_corona_virus_data', html_data)
 
-    Logger.perform_method_exit_logging("data_scraping", "scrape_corona_virus_data")
-
+    #Logger.perform_method_exit_logging("data_scraping", "scrape_corona_virus_data")
 
 if __name__ == "__main__":
-    Logger.perform_method_entry_logging("data_scraping", "scrape_corona_virus_data")
+    #Logger.perform_method_entry_logging("data_scraping", "scrape_corona_virus_data")
     scrape_corona_virus_data()
-    Logger.perform_method_exit_logging("data_scraping", "scrape_corona_virus_data")
+    #Logger.perform_method_exit_logging("data_scraping", "scrape_corona_virus_data")
+
+
+

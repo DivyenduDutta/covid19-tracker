@@ -5,7 +5,7 @@ import os
 import glob
 from os import path
 from datetime import datetime
-from YALogger.custom_logger import Logger
+#from YALogger.custom_logger import Logger
 
 
 def save_obj(obj, name, directory):
@@ -16,24 +16,27 @@ def save_obj(obj, name, directory):
 
     timestamp = datetime.now().strftime("%Y-%m-%d")
     full_json_data_file_path = directory_path + name + "_" + timestamp + ".json"
+    print(full_json_data_file_path)
     if not path.exists(full_json_data_file_path):
         if isinstance(obj, (dict, list)):
             with open(full_json_data_file_path, "w") as json_file:
                 json.dump(obj, json_file)
         else:
-            Logger.log(
-                "error",
-                "FilePickling",
-                "save_obj",
-                "Data cannot be saved as json as its not a dict",
-            )
+            print('hey')
+        #    Logger.log(
+        #        "error",
+        #        "FilePickling",
+        #        "save_obj",
+        #        "Data cannot be saved as json as its not a dict",
+        #    )
     else:
-        Logger.log(
-            "error",
-            "FilePickling",
-            "save_obj",
-            full_json_data_file_path + " already exists",
-        )
+        print('hoho')
+    #    Logger.log(
+    #        "error",
+    #        "FilePickling",
+    #        "save_obj",
+    #        full_json_data_file_path + " already exists",
+    #    )
 
 
 def load_obj(name, directory):
