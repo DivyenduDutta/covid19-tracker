@@ -98,6 +98,7 @@ def _parse_country_info(html_data, corona_data):
                     .decode("utf8")
                     .replace(",", "")
                     .replace("+", "")
+                    .replace("N/A", "")
                 )
                 country_data_obj[country_data_tag] = (
                     int(single_country_data_text_clean)
