@@ -68,13 +68,13 @@ public class DatabaseConfig {
         return new HibernateJpaVendorAdapter();
     }
 
-    @Bean(name = "batchEntityManagerFactory")
+    @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean batchEntityManagerFactory() {
         LocalContainerEntityManagerFactoryBean emfBean =
             new LocalContainerEntityManagerFactoryBean();
         emfBean.setDataSource(dataSource());
         emfBean.setPackagesToScan("com.divyendu.covidbatchapp");
-        emfBean.setBeanName("batchEntityManagerFactory");
+        emfBean.setBeanName("entityManagerFactory");
         emfBean.setJpaVendorAdapter(batchJpaVendorAdapter());
 
         Properties jpaProps = new Properties();

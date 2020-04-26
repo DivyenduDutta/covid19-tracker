@@ -1,7 +1,6 @@
 package com.divyendu.covidbatchapp.models;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

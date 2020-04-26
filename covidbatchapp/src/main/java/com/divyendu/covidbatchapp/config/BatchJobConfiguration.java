@@ -54,7 +54,7 @@ public class BatchJobConfiguration {
 	private StepBuilderFactory stepBuilderFactory;
 	
 	@Autowired
-    @Qualifier(value="batchEntityManagerFactory")
+    @Qualifier(value="entityManagerFactory")
     private EntityManagerFactory batchEntityManagerFactory;
 	
 	private FileDetails fileDetails;

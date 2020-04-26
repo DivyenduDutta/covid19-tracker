@@ -46,7 +46,37 @@ public class GlobalDataEntity implements Serializable{
 		return "GlobalDataEntity [dataReceiveDate=" + dataReceiveDate + ", totalCoronaVirusCases="
 				+ totalCoronaVirusCases + ", totalDeaths=" + totalDeaths + ", totalRecovered=" + totalRecovered + "]";
 	}
-	
-	
+
+	public Date getDataReceiveDate() {
+		return dataReceiveDate;
+	}
+
+	public void setDataReceiveDate(Date dataReceiveDate) {
+		this.dataReceiveDate = dataReceiveDate;
+	}
+
+	public int getTotalCoronaVirusCases() {
+		return totalCoronaVirusCases;
+	}
+
+	public void setTotalCoronaVirusCases(int totalCoronaVirusCases) {
+		this.totalCoronaVirusCases = totalCoronaVirusCases;
+	}
+
+	public int getTotalDeaths() {
+		return totalDeaths;
+	}
+
+	public void setTotalDeaths(int totalDeaths) {
+		this.totalDeaths = totalDeaths;
+	}
+
+	public int getTotalRecovered() {
+		return totalRecovered;
+	}
+
+	public void setTotalRecovered(int totalRecovered) {
+		this.totalRecovered = totalRecovered;
+	}
 
 }
